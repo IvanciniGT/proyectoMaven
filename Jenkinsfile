@@ -28,12 +28,32 @@ pipeline {
            }
        }
        stage("Etapa 2") {
-           steps {
-               sh """
-               echo Soy la etapa 2
-               echo Acabo la etapa 2
-               """
+           
+           stages {
+               stage("Etapa 2.1") {
+                   steps {
+                       sh "sleep 10"
+                       sh "echo Soy la etapa 2.1"
+                   }
+                   post {
+                       success { // Post tareas que siempre deben de ejecutarse
+                          sh "echo Acabó la etapa 2.1 bien!"
+                       }
+                   }
+               }
+               stage("Etapa 2.2") {
+                   steps {
+                       sh "sleep 10"
+                       sh "echo Soy la etapa 2.2"
+                   }
+                   post {
+                       failure { // Post tareas que siempre deben de ejecutarse
+                          sh "echo Acabó la etapa 2.2 con error"
+                       }
+                   }
+               }
            }
+           
            post {
                always { // Post tareas que siempre deben de ejecutarse
                   sh "echo Acabó la etapa 2"
