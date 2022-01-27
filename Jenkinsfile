@@ -10,6 +10,21 @@ pipeline {
        stage("Etapa 1") {
            steps { // Hacemos las llamadas a los plugins
                sh "echo Soy la etapa 1" // Llamada al plugin que ejecuta una shell
+               sh "echo Sigo" // Llamada al plugin que ejecuta una shell
+               sh "echo Sigo" // Llamada al plugin que ejecuta una shell
+               sh "echo Sigo" // Llamada al plugin que ejecuta una shell
+               sh "echo Salgo de la etapa 1" // Llamada al plugin que ejecuta una shell
+           }
+           post {
+               always { // Post tareas que siempre deben de ejecutarse
+                  sh "echo Acabó la etapa 1"
+               }
+               success { // Postareas que SOLO se ejecutan si los pasos (STEPS) han ido bien
+                  sh "echo Y acabó bien"
+               }
+               failure { // Postareas que SOLO se ejecutan si los pasos (STEPS) han dado error
+                  sh "echo Pero acabó mal"
+               }
            }
        }
        stage("Etapa 2") {
@@ -19,6 +34,29 @@ pipeline {
                echo Acabo la etapa 2
                """
            }
+           post {
+               always { // Post tareas que siempre deben de ejecutarse
+                  sh "echo Acabó la etapa 2"
+               }
+               success { // Postareas que SOLO se ejecutan si los pasos (STEPS) han ido bien
+                  sh "echo Y acabó bien"
+               }
+               failure { // Postareas que SOLO se ejecutan si los pasos (STEPS) han dado error
+                  sh "echo Pero acabó mal"
+               }
+           }
+       }
+    }
+
+    post {
+       always { // Post tareas que siempre deben de ejecutarse
+          sh "echo Acabó la etapa 2"
+       }
+       success { // Postareas que SOLO se ejecutan si los pasos (STEPS) han ido bien
+          sh "echo Y acabó bien"
+       }
+       failure { // Postareas que SOLO se ejecutan si los pasos (STEPS) han dado error
+          sh "echo Pero acabó mal"
        }
     }
 }
