@@ -31,6 +31,7 @@ pipeline {
                             steps {
                                 // Ejecutar pruebas -> Genera informe... tanto si se ejecutan bien como si se ejecutan mal
                                 sh "mvn test"
+                            }
                             post{
                                 always {
                                     junit testResults: 'target/surefire-reports/*.xml' 
