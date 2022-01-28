@@ -30,7 +30,7 @@ pipeline {
                         stage("Ejecución pruebas") {
                             steps {
                                 // Ejecutar pruebas -> Genera informe... tanto si se ejecutan bien como si se ejecutan mal
-                            }
+                                sh "mvn test"
                             post{
                                 always {
                                     junit testResults: 'target/surefire-reports/*.xml' 
@@ -40,24 +40,29 @@ pipeline {
                     }
                 }
                 stage("SonarQube") {
-                    // Sonarqube
+                    sh """
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=proyectoMaven \
+                        -Dsonar.host.url=http://172.31.7.239:8081 \
+                        -Dsonar.login=6b674b3412bf8d985f3d3c0536c8ae05fa256efe
+                    """
                 }
             }
         }
         stage("Empaquetado") {
             steps {
-                // Empaquetar
+                sh "mvn package -Dmaven.test.skip=true"
             }
             post{
                 success {
-                    // Guardar el artefacto (resultante del empaquetado)
+                    archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
                 }
             }
         }
     }
     post {
         always {
-            // Borrar el espacio de trabajo
+            cleanWs deleteDirs: true, patterns: [[pattern: 'target', type: 'INCLUDE']]
         }
     }
 }
